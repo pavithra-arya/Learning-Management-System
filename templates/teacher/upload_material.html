@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Material - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-8">
+    <div class="flex items-center text-sm text-slate-500 mb-6">
+        <a href="{{ url_for('teacher.dashboard') }}" class="hover:text-teal-600"><i class="fas fa-home"></i></a>
+        <span class="mx-2">/</span>
+        <a href="{{ url_for('teacher.view_course', course_id=course.id) }}" class="hover:text-teal-600">{{ course.title }}</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-900 font-medium">New Material</span>
+    </div>
+
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
+        <div class="mb-8 border-b pb-4">
+            <h1 class="text-3xl font-bold text-slate-900 flex items-center">
+                <i class="fas fa-file-upload text-teal-500 mr-3"></i> Add Study Material
+            </h1>
+            <p class="text-slate-500 mt-2">Share resources with students in <span class="font-semibold">{{ course.title }}</span>.</p>
+        </div>
+
+        <form action="{{ url_for('teacher.upload_material', course_id=course.id) }}" method="POST" class="space-y-6">
+            <div>
+                <label for="title" class="block text-sm font-medium text-slate-700 mb-2">Material Title <span class="text-red-500">*</span></label>
+                <input type="text" id="title" name="title" required
+                       class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm"
+                       placeholder="e.g. Lecture 1 Slides">
+            </div>
+
+            <div class="bg-cyan-50 p-4 border-l-4 border-cyan-400 rounded-r-md mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-cyan-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-cyan-700">
+                            For demonstration purposes, please provide a URL link to the external material (like Google Drive, YouTube, or public PDFs).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label for="url" class="block text-sm font-medium text-slate-700 mb-2">Resource URL <span class="text-red-500">*</span></label>
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-slate-300 bg-slate-50 text-slate-500 sm:text-sm">
+                        <i class="fas fa-link"></i>
+                    </span>
+                    <input type="url" name="url" id="url" required
+                           class="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-md focus:ring-teal-500 focus:border-teal-500 sm:text-sm border-slate-300"
+                           placeholder="https://example.com/material.pdf">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-4 pt-6 border-t mt-8">
+                <a href="{{ url_for('teacher.view_course', course_id=course.id) }}" class="px-6 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 font-medium transition">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium shadow-md transition flex items-center">
+                    <i class="fas fa-upload mr-2"></i> Save Material
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

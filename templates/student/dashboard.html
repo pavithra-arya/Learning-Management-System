@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - EduLMS{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900">My Dashboard</h1>
+            <p class="text-slate-500 mt-1">Access your enrolled courses and pick up where you left off.</p>
+        </div>
+        <a href="{{ url_for('student.available_courses') }}" class="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg shadow transition flex items-center">
+            <i class="fas fa-search mr-2"></i> Find Courses
+        </a>
+    </div>
+
+    <div class="mt-8">
+        <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">Enrolled Courses</h2>
+        
+        {% if enrollments %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for enrollment in enrollments %}
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition duration-200">
+                        <div class="h-32 bg-gradient-to-r from-cyan-500 to-teal-600 flex items-center justify-center relative">
+                            <i class="fas fa-book-open text-4xl text-white opacity-80"></i>
+                            <div class="absolute bottom-2 right-2 bg-white/20 backdrop-blur text-white text-xs px-2 py-1 rounded">
+                                Enrolled: {{ enrollment.enrolled_at.strftime('%b %d') }}
+                            </div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-lg font-bold text-slate-900 mb-1 lg:truncate" title="{{ enrollment.course.title }}">{{ enrollment.course.title }}</h3>
+                            <p class="text-sm text-slate-500 mb-4">{{ enrollment.course.teacher.name }}</p>
+                            
+                            <a href="{{ url_for('student.view_course', course_id=enrollment.course.id) }}" class="inline-block bg-teal-50 leading-none hover:bg-teal-100 text-teal-700 font-medium py-2 px-6 rounded-full transition w-full">
+                                Go to Class
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-slate-100">
+                <i class="fas fa-graduation-cap text-slate-300 text-6xl mb-4"></i>
+                <h3 class="text-2xl font-medium text-slate-900 mb-2">You aren't enrolled in any courses</h3>
+                <p class="text-slate-500 mb-6 max-w-md mx-auto">Start your learning journey by exploring the available courses on our platform.</p>
+                <a href="{{ url_for('student.available_courses') }}" class="inline-block bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-lg shadow-md transition">
+                    Explore Courses
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

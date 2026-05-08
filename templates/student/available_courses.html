@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Discover Courses - EduLMS{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-teal-50 border border-teal-100 p-8 rounded-xl shadow-sm text-center">
+        <h1 class="text-3xl font-bold text-teal-900 mb-3">Discover New Topics</h1>
+        <p class="text-teal-700 max-w-2xl mx-auto">Browse through our collection of premium courses created by expert educators and expand your knowledge.</p>
+    </div>
+
+    <div class="mt-8">
+        <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2 flex justify-between items-center">
+            Available Courses
+            <span class="text-sm bg-slate-100 text-slate-600 py-1 px-3 rounded-full font-normal">{{ courses|length }} Courses Available</span>
+        </h2>
+        
+        {% if courses %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for course in courses %}
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full hover:shadow-lg transition duration-300 transform hover:-translate-y-1">
+                        <div class="p-6 flex-grow">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded bg-teal-100 flex items-center justify-center text-teal-600 text-xl font-bold">
+                                    {{ course.title[0] }}
+                                </div>
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">New</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2 leading-tight">{{ course.title }}</h3>
+                            <p class="text-sm font-medium text-teal-600 mb-3">
+                                <i class="fas fa-chalkboard-teacher mr-1"></i> {{ course.teacher.name }}
+                            </p>
+                            <p class="text-slate-600 text-sm line-clamp-3 mb-4">{{ course.description }}</p>
+                        </div>
+                        <div class="p-6 pt-0 mt-auto border-t border-slate-100 flex items-center justify-between">
+                            <div class="text-sm text-slate-500">
+                                <i class="fas fa-users mr-1"></i> {{ course.enrollments|length }} enrolled
+                            </div>
+                            <form action="{{ url_for('student.enroll', course_id=course.id) }}" method="POST">
+                                <button type="submit" class="bg-white border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm">
+                                    Enroll Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-slate-100">
+                <i class="fas fa-check-circle text-green-400 text-6xl mb-4"></i>
+                <h3 class="text-2xl font-medium text-slate-900 mb-2">You're all caught up!</h3>
+                <p class="text-slate-500 max-w-md mx-auto">You have enrolled in all available courses. Check back later for new content.</p>
+                <a href="{{ url_for('student.dashboard') }}" class="mt-6 inline-block text-teal-600 hover:text-teal-800 font-medium">
+                    Return to Dashboard
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LMS{% endblock %}</title>
+    <!-- Include Tailwind CSS via CDN for development -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav class="bg-teal-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ url_for('index') }}" class="flex-shrink-0 flex items-center font-bold text-xl tracking-wider">
+                        <i class="fas fa-graduation-cap mr-2"></i> EduLMS
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'teacher' %}
+                            <a href="{{ url_for('teacher.dashboard') }}" class="hover:bg-teal-500 px-3 py-2 rounded-md transition duration-150">Dashboard</a>
+                        {% else %}
+                            <a href="{{ url_for('student.dashboard') }}" class="hover:bg-teal-500 px-3 py-2 rounded-md transition duration-150">Dashboard</a>
+                            <a href="{{ url_for('student.available_courses') }}" class="hover:bg-teal-500 px-3 py-2 rounded-md transition duration-150">Discover</a>
+                            <a href="{{ url_for('student.progress') }}" class="hover:bg-teal-500 px-3 py-2 rounded-md transition duration-150">Progress</a>
+                        {% endif %}
+                        <span class="text-teal-200 border-l border-teal-400 pl-4 ml-2">Hi, {{ current_user.name }}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="bg-white text-teal-600 hover:bg-slate-100 px-4 py-2 rounded-md font-medium transition duration-150">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="hover:text-teal-200 font-medium transition duration-150">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="bg-white text-teal-600 hover:bg-slate-100 px-4 py-2 rounded-md font-medium transition duration-150">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full max-w-7xl">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-md shadow-sm flex items-center {{ 'bg-red-50 text-red-700 border-l-4 border-red-500' if category == 'error' else 'bg-green-50 text-green-700 border-l-4 border-green-500' }}">
+                        <i class="fas {{ 'fa-exclamation-circle text-red-500' if category == 'error' else 'fa-check-circle text-green-500' }} mr-3"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-slate-800 text-white py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 EduLMS Platform. All rights reserved.</p>
+            <p class="text-slate-400 text-sm mt-2">Built for powerful learning experiences.</p>
+        </div>
+    </footer>
+</body>
+</html>
